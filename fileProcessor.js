@@ -20,11 +20,15 @@ async function processJSONFiles(inputFolder, outputFolder) {
       // Read JSON file
       const jsonData = await fs.readJson(inputFilePath, "utf8");
 
-      console.log(jsonData);
+      const jsonDataFinal =
+        typeof jsonData === "string" ? jsonData : jsonData[0];
 
       // Apply filter to the single string element in the JSON array
-      const filteredData = jsonData[0]
-        .replace(/[^\w\s.?!':,%+-=()\-]/g, " ")
+      const filteredData = jsonDataFinal
+        .replace(
+          /[^\w\s.?!':,%+-=()\-/"`!@#$%^&*()_+}\]\"|;:'".>/?~`[{}]/g,
+          " "
+        )
         .replace(/\s+/g, " ");
       // Save modified JSON back to file
       await fs.writeJson(outputFilePath, [filteredData], { spaces: 2 });
